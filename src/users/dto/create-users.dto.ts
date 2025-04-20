@@ -11,8 +11,8 @@ export class CreateUsersDto {
   @IsNumber()
   id: number;
 
-  @IsString()
-  @MinLength(3, { message: 'Name should be empty!' })
+  @IsString({ message: 'Name should be string!' })
+  @MinLength(3, { message: 'Name should be empty! minium 3.' })
   name: string;
 
   @IsEmail()

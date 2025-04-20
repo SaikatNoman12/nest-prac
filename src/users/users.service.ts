@@ -2,24 +2,33 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-  users: { id?: number; name: string; age: number; gender: string }[] = [
+  users: {
+    id: number;
+    name: string;
+    isMarried: boolean;
+    gender?: string;
+    email: string;
+  }[] = [
     {
       id: 1,
       name: 'Jhon',
-      age: 10,
+      isMarried: true,
       gender: 'male',
+      email: 'abc@gmail.com',
     },
     {
       id: 2,
       name: 'Deo',
-      age: 16,
+      isMarried: true,
       gender: 'male',
+      email: 'abc@gmail.com',
     },
     {
       id: 3,
       name: 'karina',
-      age: 20,
+      isMarried: true,
       gender: 'female',
+      email: 'abc@gmail.com',
     },
   ];
 
@@ -32,10 +41,11 @@ export class UserService {
   }
 
   createNewUser(userData: {
-    id?: number;
+    id: number;
     name: string;
-    age: number;
-    gender: string;
+    isMarried: boolean;
+    gender?: string;
+    email: string;
   }) {
     return this.users.push({
       ...userData,
