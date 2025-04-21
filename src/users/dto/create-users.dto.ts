@@ -19,6 +19,9 @@ export class CreateUsersDto {
   email: string;
 
   @IsString()
+  password: string;
+
+  @IsString()
   @IsOptional()
   gender?: string;
 

@@ -22,7 +22,7 @@ export class UsersController {
   getUsers(@Query() query: GetUsersDto) {
     const users = this.userService.getAllUsers();
     if (query.gender) {
-      return users.filter((user) => user.gender === query.gender);
+      return users?.filter((user) => user.gender === query.gender);
     }
     return users;
   }
