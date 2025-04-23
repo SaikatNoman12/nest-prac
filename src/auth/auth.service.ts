@@ -18,6 +18,6 @@ export class AuthService {
       this.isUserLoggedIn = true;
       return 'User logged in successfully.';
     }
-    return 'User credential not valid! ';
+    return 'User credential not valid!';
   }
 }
