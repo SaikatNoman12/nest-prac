@@ -1,17 +1,10 @@
-import {
-  IsBoolean,
-  IsEmail,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUsersDto {
   @IsString({ message: 'Name should be string!' })
   @MinLength(3, { message: 'Name should be empty! minium 3.' })
   @MaxLength(150, { message: 'Name should be lower then 150.' })
-  name: string;
+  username: string;
 
   @IsEmail()
   @MaxLength(100, { message: 'Email should be lower then 100.' })
@@ -21,12 +14,4 @@ export class CreateUsersDto {
   @MinLength(8, { message: 'Password should be empty! minium 8.' })
   @MaxLength(100, { message: 'Password should be lower then 100.' })
   password: string;
-
-  @IsString()
-  @IsOptional()
-  @MaxLength(100, { message: 'Gender should be lower then 10.' })
-  gender?: string;
-
-  @IsBoolean()
-  isMarried: boolean;
 }

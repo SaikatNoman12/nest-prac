@@ -17,11 +17,16 @@ export class UserService {
 
   public async createUser(userDto: CreateUsersDto) {
     const user = await this.userRepository.findOne({
-      where: { email: userDto.email },
+      where: { email: userDto.email, username: userDto.username },
     });
 
     if (user) {
-      return 'This user is already exists!';
+      if (user.email === userDto.email && user.username === userDto.username) {
+        return 'This username and email already exist!';
+      }
+      return user.email === userDto.email
+        ? 'This email is already registered!'
+        : 'This username is already taken!';
     }
 
     let newUser = this.userRepository.create(userDto);

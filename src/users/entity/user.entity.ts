@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -9,8 +16,9 @@ export class User {
     type: 'varchar',
     nullable: false,
     length: 150,
+    unique: true,
   })
-  name: string;
+  username: string;
 
   @Column({
     type: 'varchar',
@@ -27,15 +35,12 @@ export class User {
   })
   password: string;
 
-  @Column({
-    type: 'varchar',
-    length: '10',
-    nullable: true,
-  })
-  gender: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({
-    type: 'boolean',
-  })
-  isMarried: boolean;
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
