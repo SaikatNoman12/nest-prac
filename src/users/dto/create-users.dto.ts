@@ -1,28 +1,30 @@
 import {
   IsBoolean,
   IsEmail,
-  IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   MinLength,
 } from 'class-validator';
 
 export class CreateUsersDto {
-  @IsNumber()
-  id: number;
-
   @IsString({ message: 'Name should be string!' })
   @MinLength(3, { message: 'Name should be empty! minium 3.' })
+  @MaxLength(150, { message: 'Name should be lower then 150.' })
   name: string;
 
   @IsEmail()
+  @MaxLength(100, { message: 'Email should be lower then 100.' })
   email: string;
 
   @IsString()
+  @MinLength(8, { message: 'Password should be empty! minium 8.' })
+  @MaxLength(100, { message: 'Password should be lower then 100.' })
   password: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(100, { message: 'Gender should be lower then 10.' })
   gender?: string;
 
   @IsBoolean()
