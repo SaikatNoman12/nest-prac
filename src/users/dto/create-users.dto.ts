@@ -1,9 +1,9 @@
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUsersDto {
-  @IsString({ message: 'Name should be string!' })
-  @MinLength(3, { message: 'Name should be empty! minium 3.' })
-  @MaxLength(150, { message: 'Name should be lower then 150.' })
+  @IsString({ message: 'Username should be string!' })
+  @MinLength(3, { message: 'Username should be empty! minium 3.' })
+  @MaxLength(150, { message: 'Username should be lower then 150.' })
   username: string;
 
   @IsEmail()

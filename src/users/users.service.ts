@@ -16,17 +16,17 @@ export class UserService {
   }
 
   public async createUser(userDto: CreateUsersDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: userDto.email, username: userDto.username },
-    });
+    const [existingEmail, existingUsername] = await Promise.all([
+      this.userRepository.findOne({ where: { email: userDto.email } }),
+      this.userRepository.findOne({ where: { username: userDto.username } }),
+    ]);
 
-    if (user) {
-      if (user.email === userDto.email && user.username === userDto.username) {
-        return 'This username and email already exist!';
-      }
-      return user.email === userDto.email
-        ? 'This email is already registered!'
-        : 'This username is already taken!';
+    if (existingEmail && existingUsername) {
+      return 'Both email and username already exist.';
+    } else if (existingEmail) {
+      return 'Email already exists.';
+    } else if (existingUsername) {
+      return 'Username already exists.';
     }
 
     let newUser = this.userRepository.create(userDto);
