@@ -1,30 +1,30 @@
 import { IsDate, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateProfileDto {
+  @IsOptional()
   @IsString()
   @MaxLength(150, { message: 'First name up to 150 character not supported!' })
-  @IsOptional()
   firstName: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(150, { message: 'Last Name Up to 150 character not supported!' })
-  @IsOptional()
   lastName: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(10, { message: 'Gender Up to 10 character not supported!' })
-  @IsOptional()
   gender: string;
 
-  @IsDate()
   @IsOptional()
+  @IsDate()
   dateOfBirth: Date;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   bio: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   profileImage: string;
 }
