@@ -38,7 +38,7 @@ export class User {
   })
   password: string;
 
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, { cascade: ['insert', 'remove'] })
   @JoinColumn()
   profile?: Profile;
 

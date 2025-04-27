@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
-import { DeepPartial, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Profile } from 'src/profile/entity/profile.entity';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -33,20 +34,18 @@ export class UserService {
       return 'Username already exists.';
     }
 
-    /*    
-      I solved this error use DeepPartial<>
-      const user = plainToClass(User, userDto);
+    // const user = plainToClass(User, userDto);
+    // user.profile = plainToClass(Profile, user.profile ?? {});
+    // let newUser = this.userRepository.create(user);
+    // newUser = await this.userRepository.save(newUser);
+    // return newUser;
 
-      if (user.profile) {
-        user.profile = plainToClass(Profile, userDto.profile);
-      } 
-    */
-    const profile = this.profileRepository.create(userDto.profile ?? {});
-    await this.profileRepository.save(profile);
-
-    let newUser = this.userRepository.create(userDto as DeepPartial<Profile>);
-    newUser.profile = profile;
-    newUser = await this.userRepository.save(newUser);
+    const newUser = await this.userRepository.save(
+      this.userRepository.create({
+        ...userDto,
+        profile: userDto.profile ?? {},
+      }),
+    );
     return newUser;
   }
 }
