@@ -3,20 +3,24 @@ import { CreateUsersDto } from './dto/create-users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
-import { Profile } from 'src/profile/entity/profile.entity';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
-    @InjectRepository(Profile)
-    private profileRepository: Repository<Profile>,
   ) {}
 
   public async getAllUsers() {
+    /* 
+    when without use egger in entity
+    return this.userRepository.find(
+    {
+      relations: {
+        profile: true,
+      },
+    });
+    */
     return this.userRepository.find();
   }
 
