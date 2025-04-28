@@ -11,6 +11,16 @@ export class ProfileService {
   ) {}
 
   getAllProfile() {
-    return this.profileRepository.find();
+    return this.profileRepository.find({
+      relations: {
+        user: true,
+      },
+    });
+  }
+
+  public async deleteProfile(id: number) {
+    await this.profileRepository.delete(id);
+
+    return { delete: true };
   }
 }

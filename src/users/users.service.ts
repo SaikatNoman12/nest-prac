@@ -3,25 +3,24 @@ import { CreateUsersDto } from './dto/create-users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import { Profile } from 'src/profile/entity/profile.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Profile)
+    private profileRepository: Repository<Profile>,
   ) {}
 
   public async getAllUsers() {
-    /* 
-    when without use egger in entity
-    return this.userRepository.find(
-    {
+    return this.userRepository.find({
       relations: {
         profile: true,
       },
     });
-    */
-    return this.userRepository.find();
   }
 
   public async createUser(userDto: CreateUsersDto) {
@@ -51,5 +50,15 @@ export class UserService {
       }),
     );
     return newUser;
+  }
+
+  public async deleteUser(id: number) {
+    // const user = await this.userRepository.findOneBy({ id: id });
+
+    await this.userRepository.delete(id);
+
+    // await this.profileRepository.delete(user?.profile?.id as number);
+
+    return { delete: true };
   }
 }

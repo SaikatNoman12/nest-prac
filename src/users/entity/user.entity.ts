@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -38,8 +37,10 @@ export class User {
   })
   password: string;
 
-  @OneToOne(() => Profile, { cascade: ['insert', 'remove'], eager: true })
-  @JoinColumn()
+  @OneToOne(() => Profile, (profile) => profile.user, {
+    cascade: ['insert', 'remove'],
+    //  eager: true this use for get relations data
+  })
   profile?: Profile;
 
   @CreateDateColumn()
