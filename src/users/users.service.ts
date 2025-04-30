@@ -61,4 +61,9 @@ export class UserService {
 
     return { delete: true };
   }
+
+  public async getSingleUser(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+    return user;
+  }
 }

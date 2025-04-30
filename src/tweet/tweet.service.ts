@@ -1,26 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { TweetDto } from './dtos/tweet.dto';
+import { UserService } from 'src/users/users.service';
+import { Tweet } from './entity/tweet.entity';
+import { DeepPartial, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TweetService {
-  tweets: { name: string; userId: number; date: string }[] = [
-    {
-      name: 'Abdullah Joss',
-      userId: 1,
-      date: '20-12-2025',
-    },
-    {
-      name: 'Happy Birthday',
-      userId: 1,
-      date: '20-12-2025',
-    },
-    {
-      name: 'Json Lang',
-      userId: 2,
-      date: '20-12-2025',
-    },
-  ];
+  constructor(
+    private readonly userService: UserService,
+    @InjectRepository(Tweet)
+    private readonly tweetRepository: Repository<Tweet>,
+  ) {}
 
-  findAll() {
-    return this.tweets;
+  public async createTweet(tweetDto: TweetDto) {
+    const user = await this.userService.getSingleUser(tweetDto.userId);
+
+    const newTweet = this.tweetRepository.create({
+      ...tweetDto,
+      user: user as DeepPartial<Tweet>,
+    });
+
+    const savedTweet = await this.tweetRepository.save(newTweet);
+    return savedTweet;
   }
 }
