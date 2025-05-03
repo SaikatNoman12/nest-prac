@@ -22,5 +22,6 @@ export class TweetDto {
   @IsOptional()
   @IsInt({ each: true })
   @IsArray()
-  hashtags: number[];
+  @IsNotEmpty()
+  hashtags?: number[];
 }
