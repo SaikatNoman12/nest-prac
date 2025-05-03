@@ -45,5 +45,5 @@ export class Tweet {
   @JoinTable({
     name: 'tweet_hashtags',
   })
-  hashtags: Hashtag;
+  hashtags: Hashtag[];
 }
