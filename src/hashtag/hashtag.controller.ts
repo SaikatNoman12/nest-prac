@@ -1,6 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { HashtagService } from './hashtag.service';
 import { CreateHashtagDto } from './dtos/hashtag.dto';
+import { UpdateHashtagDto } from './dtos/uupdate-hashtag.dto';
 
 @Controller('hashtag')
 export class HashtagController {
@@ -9,5 +17,13 @@ export class HashtagController {
   @Post('create')
   async createHashtag(@Body() createDto: CreateHashtagDto) {
     return this.hashtagService.createHashtag(createDto);
+  }
+
+  @Patch(':hashId')
+  async updateHashtag(
+    @Param('hashId', ParseIntPipe) hashId: number,
+    @Body() hashData: UpdateHashtagDto,
+  ) {
+    return this.hashtagService.updateHashtag(hashId, hashData);
   }
 }

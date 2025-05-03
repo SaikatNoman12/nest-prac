@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Hashtag } from './entity/hashtag.entity';
 import { In, Repository } from 'typeorm';
 import { CreateHashtagDto } from './dtos/hashtag.dto';
+import { UpdateHashtagDto } from './dtos/uupdate-hashtag.dto';
 
 @Injectable()
 export class HashtagService {
@@ -28,5 +29,21 @@ export class HashtagService {
     return await this.hashtagRepository.find({
       where: { id: In(hashtags) },
     });
+  }
+
+  public async updateHashtag(hashId: number, hashData: UpdateHashtagDto) {
+    const existingHashtag = await this.hashtagRepository.findOne({
+      where: { id: hashId },
+    });
+    if (!existingHashtag) {
+      return 'Hashtag not found';
+    }
+    if (hashData.text === '') {
+      return 'Hashtag text cannot be empty';
+    }
+    existingHashtag.id = hashId;
+    existingHashtag.text = hashData.text ?? existingHashtag.text;
+
+    return await this.hashtagRepository.save(existingHashtag);
   }
 }
