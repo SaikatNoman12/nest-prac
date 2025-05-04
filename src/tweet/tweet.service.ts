@@ -76,4 +76,9 @@ export class TweetService {
 
     return await this.tweetRepository.save(tweet);
   }
+
+  public async deleteTweet(tweetId: number) {
+    await this.tweetRepository.delete({ id: tweetId });
+    return 'Tweet deleted successfully';
+  }
 }

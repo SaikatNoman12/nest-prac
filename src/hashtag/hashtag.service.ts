@@ -46,4 +46,9 @@ export class HashtagService {
 
     return await this.hashtagRepository.save(existingHashtag);
   }
+
+  public async deleteHashtag(hashId: number) {
+    await this.hashtagRepository.delete({ id: hashId });
+    return 'Hashtag deleted successfully';
+  }
 }

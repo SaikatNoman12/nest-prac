@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Patch,
@@ -25,5 +26,10 @@ export class HashtagController {
     @Body() hashData: UpdateHashtagDto,
   ) {
     return this.hashtagService.updateHashtag(hashId, hashData);
+  }
+
+  @Delete(':hashId')
+  async deleteHashtag(@Param('hashId', ParseIntPipe) hashId: number) {
+    return this.hashtagService.deleteHashtag(hashId);
   }
 }
