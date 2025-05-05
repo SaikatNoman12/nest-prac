@@ -4,28 +4,32 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TweetModule } from './tweet/tweet.module';
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ProfileModule } from './profile/profile.module';
 import { HashtagModule } from './hashtag/hashtag.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
     TweetModule,
     AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [],
-      inject: [],
-      useFactory: () => ({
-        type: 'postgres',
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
+        type: configService.get<string>('DB_TYPE') as 'postgres',
         // entities: [User],
         autoLoadEntities: true,
         synchronize: true,
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'HelloNomaan123',
-        database: 'nestjs',
+        host: configService.get<string>('DB_HOST'),
+        port: Number(configService.get<number>('DB_PORT')),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
       }),
     }),
     ProfileModule,
