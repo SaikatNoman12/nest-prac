@@ -16,7 +16,11 @@ export class UserService {
 
   public async getAllUsers() {
     const developmentType = this.configService.get<string>('ENV_MODE');
-    console.log('developmentType', developmentType);
+    console.log('ENV_MODE IN ENV', developmentType);
+
+    const env = process.env.NODE_ENV;
+    console.log('NODE_ENV IN SYSTEM', env);
+
     return this.userRepository.find({
       relations: {
         profile: true,
