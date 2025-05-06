@@ -9,6 +9,8 @@ import { ProfileModule } from './profile/profile.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+const ENV = process.env.NODE_ENV;
+
 @Module({
   imports: [
     UsersModule,
@@ -16,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
