@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, RequestTimeoutException } from '@nestjs/common';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
@@ -15,17 +15,35 @@ export class UserService {
   ) {}
 
   public async getAllUsers() {
-    const developmentType = this.configService.get<string>('ENV_MODE');
-    console.log('ENV_MODE IN ENV', developmentType);
+    try {
+      const developmentType = this.configService.get<string>('ENV_MODE');
+      console.log('ENV_MODE IN ENV', developmentType);
 
-    const env = process.env.NODE_ENV;
-    console.log('NODE_ENV IN SYSTEM', env);
+      const env = process.env.NODE_ENV;
+      console.log('NODE_ENV IN SYSTEM', env);
 
-    return this.userRepository.find({
-      relations: {
-        profile: true,
-      },
-    });
+      return this.userRepository.find({
+        relations: {
+          profile: true,
+        },
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw new RequestTimeoutException(
+          'An error occurred. Please try again.',
+          {
+            description: `Couldn't connect to the database! Error: ${err.message}`,
+          },
+        );
+      } else {
+        throw new RequestTimeoutException(
+          'An unknown error occurred. Please try again.',
+          {
+            description: "Couldn't connect to the database!",
+          },
+        );
+      }
+    }
   }
 
   public async createUser(userDto: CreateUsersDto) {
