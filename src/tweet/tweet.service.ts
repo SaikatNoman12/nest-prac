@@ -17,6 +17,15 @@ export class TweetService {
     private hashtagService: HashtagService,
   ) {}
 
+  public async getAllTweets() {
+    const allTweets = await this.tweetRepository.find({
+      relations: {
+        user: true,
+      },
+    });
+    return allTweets;
+  }
+
   public async getUserTweets(userId: number) {
     const user = await this.userService.getSingleUser(userId);
 
