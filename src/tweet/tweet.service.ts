@@ -6,7 +6,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HashtagService } from 'src/hashtag/hashtag.service';
 import { UpdateTweetDto } from './dtos/update-tweet.dto';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { GetTweetQueryPaginationDto } from './dtos/get-tweet-query.dto';
 
 @Injectable()
 export class TweetService {
@@ -18,7 +18,7 @@ export class TweetService {
     private hashtagService: HashtagService,
   ) {}
 
-  public async getAllTweets(paginationQueryDto: PaginationQueryDto) {
+  public async getAllTweets(paginationQueryDto: GetTweetQueryPaginationDto) {
     const allTweets = await this.tweetRepository.find({
       skip: (paginationQueryDto?.page - 1) * paginationQueryDto?.limit,
       take: paginationQueryDto.limit,

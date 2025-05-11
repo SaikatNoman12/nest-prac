@@ -12,14 +12,15 @@ import {
 import { TweetService } from './tweet.service';
 import { TweetDto } from './dtos/tweet.dto';
 import { UpdateTweetDto } from './dtos/update-tweet.dto';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { GetTweetQueryPaginationDto } from './dtos/get-tweet-query.dto';
 
 @Controller('tweet')
 export class TweetController {
   constructor(private tweetService: TweetService) {}
 
   @Get()
-  getAllTweets(@Query() paginationQueryDto: PaginationQueryDto) {
+  getAllTweets(@Query() paginationQueryDto: GetTweetQueryPaginationDto) {
+    console.log('paginationQueryDto', paginationQueryDto);
     return this.tweetService.getAllTweets(paginationQueryDto);
   }
 
