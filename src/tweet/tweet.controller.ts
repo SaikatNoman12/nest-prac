@@ -20,8 +20,7 @@ export class TweetController {
 
   @Get()
   getAllTweets(@Query() paginationQueryDto: PaginationQueryDto) {
-    console.log('paginationQueryDto', paginationQueryDto);
-    return this.tweetService.getAllTweets();
+    return this.tweetService.getAllTweets(paginationQueryDto);
   }
 
   @Get(':userId')
