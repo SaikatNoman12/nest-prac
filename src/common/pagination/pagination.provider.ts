@@ -23,6 +23,29 @@ export class PaginationProvider<T extends ObjectLiteral> {
       findOptions.where = where;
     }
 
-    return await repository.find(findOptions);
+    const allData = await repository.find(findOptions);
+    const totalItems = await repository.count();
+    const currentPage = paginationQueryDto.page;
+    const totalPages = Math.ceil(totalItems / paginationQueryDto.limit);
+
+    const nextPage = currentPage === totalPages ? currentPage : currentPage + 1;
+    const prevPage = currentPage === 1 ? currentPage : currentPage - 1;
+
+    return {
+      data: allData,
+      meta: {
+        itemsPerPage: paginationQueryDto.limit,
+        totalItems: totalItems,
+        currentPage: currentPage,
+        totalPages: totalPages,
+      },
+      links: {
+        first: 1,
+        last: totalPages,
+        current: currentPage,
+        next: nextPage,
+        previous: prevPage,
+      },
+    };
   }
 }
