@@ -11,17 +11,22 @@ import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConnectionError } from 'src/error/error';
 import { UserAlreadyExistsException } from 'src/error/user-already-exists.exception';
+import { PaginationProvider } from 'src/common/pagination/pagination.provider';
+import { PaginatedInterface } from 'src/common/pagination/paginated';
+import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
     private readonly configService: ConfigService,
+    private readonly paginationProvider: PaginationProvider<User>,
   ) {}
 
-  public async getAllUsers() {
+  public async getAllUsers(
+    paginationDto: PaginationQueryDto,
+  ): Promise<PaginatedInterface<User>> {
     try {
       const developmentType = this.configService.get<string>('ENV_MODE');
       console.log('ENV_MODE IN ENV', developmentType);
@@ -29,11 +34,12 @@ export class UserService {
       const env = process.env.NODE_ENV;
       console.log('NODE_ENV IN SYSTEM', env);
 
-      return this.userRepository.find({
-        relations: {
-          profile: true,
-        },
-      });
+      return this.paginationProvider.paginateQuery(
+        paginationDto,
+        this.userRepository,
+        null,
+        ['profile'],
+      );
     } catch (err: unknown) {
       if (err instanceof Error) {
         throw new RequestTimeoutException(

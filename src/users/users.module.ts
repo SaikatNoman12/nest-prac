@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Profile } from 'src/profile/entity/profile.entity';
 import { Tweet } from 'src/tweet/entity/tweet.entity';
+import { PaginationModule } from 'src/common/pagination/pagination.module';
 
 @Module({
   controllers: [UsersController],
@@ -13,6 +14,7 @@ import { Tweet } from 'src/tweet/entity/tweet.entity';
   imports: [
     forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([User, Profile, Tweet]),
+    PaginationModule,
   ],
   exports: [UserService],
 })
