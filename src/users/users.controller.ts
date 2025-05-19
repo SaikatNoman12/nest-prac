@@ -1,15 +1,12 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
-  Post,
   Query,
 } from '@nestjs/common';
 import { UserService } from './users.service';
-import { CreateUsersDto } from './dto/create-users.dto';
 import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
 @Controller('users')
 export class UsersController {
@@ -20,10 +17,10 @@ export class UsersController {
     return this.userService.getAllUsers(paginationDto);
   }
 
-  @Post('create')
-  createUser(@Body() userDto: CreateUsersDto) {
-    return this.userService.createUser(userDto);
-  }
+  // @Post('create')
+  // createUser(@Body() userDto: CreateUsersDto) {
+  //   return this.userService.createUser(userDto);
+  // }
 
   @Delete(':id')
   deleteUser(@Param('id', ParseIntPipe) id: number) {
