@@ -5,6 +5,7 @@ import {
   Inject,
   Injectable,
   RequestTimeoutException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -155,5 +156,29 @@ export class UserService {
       );
     }
     return user;
+  }
+
+  public async findOneUser(email: string) {
+    let user: User | undefined = undefined;
+
+    try {
+      user = (await this.userRepository.findOneBy({ email })) as User;
+    } catch (error) {
+      throw new RequestTimeoutException(error, {
+        description: "User with given email couldn't found!",
+      });
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('User do not exist!');
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 }

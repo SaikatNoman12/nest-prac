@@ -16,12 +16,9 @@ export class AuthService {
   ) {}
 
   login(loginDto: LoginDto) {
-    console.log('auth secret key', this.authConfiguration.sharedSecret);
+    const userFind = this.userService.findOneUser(loginDto.email);
 
-    return {
-      success: 'User logged in successfully!',
-      ...loginDto,
-    };
+    return userFind;
   }
 
   public async signupUser(createUserDto: CreateUsersDto) {
