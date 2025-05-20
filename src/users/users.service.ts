@@ -179,6 +179,7 @@ export class UserService {
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      password: user.password,
     };
   }
 }
