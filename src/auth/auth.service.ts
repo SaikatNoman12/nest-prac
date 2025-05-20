@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { ConfigType } from '@nestjs/config';
 import authConfig from './config/auth.config';
@@ -11,6 +11,7 @@ export class AuthService {
     @Inject(authConfig.KEY)
     private readonly authConfiguration: ConfigType<typeof authConfig>,
 
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
