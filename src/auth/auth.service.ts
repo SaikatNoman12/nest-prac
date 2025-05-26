@@ -10,6 +10,7 @@ import authConfig from './config/auth.config';
 import { CreateUsersDto } from 'src/users/dto/create-users.dto';
 import { UserService } from 'src/users/users.service';
 import { HashingProvider } from './provider/hashing.provider';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,8 @@ export class AuthService {
     private readonly userService: UserService,
 
     private readonly hashProvider: HashingProvider,
+
+    private readonly jwtService: JwtService,
   ) {}
 
   public async login(loginDto: LoginDto) {
@@ -35,8 +38,21 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect Password!');
     }
 
+    const token = await this.jwtService.signAsync(
+      {
+        sub: userFind.id,
+        email: userFind.email,
+      },
+      {
+        secret: this.authConfiguration.secret,
+        expiresIn: this.authConfiguration.expiresIn,
+        audience: this.authConfiguration.audience,
+        issuer: this.authConfiguration.issuer,
+      },
+    );
+
     return {
-      data: userFind,
+      data: token,
       success: true,
       message: 'User logged in successfully.',
     };
