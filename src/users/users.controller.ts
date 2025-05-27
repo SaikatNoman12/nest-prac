@@ -5,9 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
+import { AuthorizeGuard } from 'src/auth/guards/authorize.gurad';
 @Controller('users')
 export class UsersController {
   constructor(private userService: UserService) {}
@@ -27,6 +29,7 @@ export class UsersController {
     return this.userService.deleteUser(id);
   }
 
+  @UseGuards(AuthorizeGuard)
   @Get(':userId')
   getUser(@Param('userId', ParseIntPipe) userId: number) {
     return this.userService.getSingleUser(userId);
