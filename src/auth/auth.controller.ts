@@ -5,10 +5,11 @@ import { CreateUsersDto } from 'src/users/dto/create-users.dto';
 import { AllowAnonymous } from './decorators/allow-anonymous.decorators';
 
 @Controller('auth')
+@AllowAnonymous()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @AllowAnonymous()
+  // @AllowAnonymous()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
