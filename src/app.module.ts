@@ -11,10 +11,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import envValidator from './config/env.validation';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import authConfig from './auth/config/auth.config';
+import { AuthorizeGuard } from './auth/guards/authorize.guard';
 
 const ENV = process.env.NODE_ENV;
 
 @Module({
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizeGuard,
+    },
+  ],
   imports: [
     UsersModule,
     TweetModule,
@@ -42,8 +53,9 @@ const ENV = process.env.NODE_ENV;
     }),
     ProfileModule,
     HashtagModule,
+    ConfigModule.forFeature(authConfig),
+    JwtModule.registerAsync(authConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
