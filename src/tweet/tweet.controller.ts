@@ -13,6 +13,7 @@ import { TweetService } from './tweet.service';
 import { TweetDto } from './dtos/tweet.dto';
 import { UpdateTweetDto } from './dtos/update-tweet.dto';
 import { GetTweetQueryPaginationDto } from './dtos/get-tweet-query.dto';
+import { ActiveUser } from 'src/auth/decorators/active-user.decorator';
 
 @Controller('tweet')
 export class TweetController {
@@ -30,8 +31,9 @@ export class TweetController {
   }
 
   @Post('create')
-  createTweet(@Body() tweetDto: TweetDto) {
-    return this.tweetService.createTweet(tweetDto);
+  createTweet(@Body() tweetDto: TweetDto, @ActiveUser('sub') user) {
+    console.log(user);
+    // return this.tweetService.createTweet(tweetDto);
   }
 
   @Patch(':tweetId')

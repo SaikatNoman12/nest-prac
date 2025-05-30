@@ -10,6 +10,7 @@ import { Request } from 'express';
 import authConfig from '../config/auth.config';
 import { ConfigType } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
+import { REQUEST_USER_KEY } from 'src/constants/constants';
 
 @Injectable()
 export class AuthorizeGuard implements CanActivate {
@@ -45,8 +46,8 @@ export class AuthorizeGuard implements CanActivate {
         this.authConfiguration,
       );
 
-      request['user'] = payload;
-      console.log(payload);
+      request[REQUEST_USER_KEY] = payload;
+      console.log('payload', payload);
     } catch (error) {
       throw new UnauthorizedException(error);
     }
