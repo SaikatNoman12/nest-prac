@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { TweetDto } from './dtos/tweet.dto';
 import { UserService } from 'src/users/users.service';
 import { Tweet } from './entity/tweet.entity';
@@ -9,6 +15,8 @@ import { UpdateTweetDto } from './dtos/update-tweet.dto';
 import { GetTweetQueryPaginationDto } from './dtos/get-tweet-query.dto';
 import { PaginationProvider } from 'src/common/pagination/pagination.provider';
 import { PaginatedInterface } from 'src/common/pagination/paginated';
+import { Hashtag } from 'src/hashtag/entity/hashtag.entity';
+import { User } from 'src/users/entity/user.entity';
 
 @Injectable()
 export class TweetService {
@@ -47,13 +55,25 @@ export class TweetService {
     return tweets;
   }
 
-  public async createTweet(tweetDto: TweetDto) {
-    const user = await this.userService.getSingleUser(tweetDto.userId);
+  public async createTweet(tweetDto: TweetDto, userId: number) {
+    let user: User | undefined = undefined;
+    let hashtags: Hashtag[] | undefined = undefined;
 
-    const hashtags =
-      tweetDto.hashtags && tweetDto.hashtags.length
-        ? await this.hashtagService.getHashtags(tweetDto.hashtags)
-        : [];
+    try {
+      user = await this.userService.getSingleUser(userId);
+      if (tweetDto?.hashtags) {
+        hashtags =
+          tweetDto?.hashtags && tweetDto?.hashtags?.length
+            ? await this.hashtagService.getHashtags(tweetDto.hashtags)
+            : [];
+      }
+    } catch (error) {
+      throw new RequestTimeoutException(error);
+    }
+
+    if (tweetDto?.hashtags?.length !== hashtags?.length) {
+      throw new BadRequestException('Invalid hashtags provided');
+    }
 
     const newTweet = this.tweetRepository.create({
       ...tweetDto,
@@ -61,8 +81,15 @@ export class TweetService {
       user: user as DeepPartial<Tweet>,
     });
 
-    const savedTweet = await this.tweetRepository.save(newTweet);
-    return savedTweet;
+    try {
+      const savedTweet = await this.tweetRepository.save(newTweet);
+      return savedTweet;
+    } catch (error) {
+      throw new ConflictException({
+        description: 'Failed to create tweet',
+        cause: error,
+      });
+    }
   }
 
   public async updateTweet(tweetId: number, tweetDto: UpdateTweetDto) {

@@ -25,15 +25,14 @@ export class TweetController {
     return this.tweetService.getAllTweets(paginationQueryDto);
   }
 
-  @Get(':userId')
-  getUserTweets(@Param('userId', ParseIntPipe) userId: number) {
+  @Get()
+  getUserTweets(@ActiveUser('sub') userId: number) {
     return this.tweetService.getUserTweets(userId);
   }
 
   @Post('create')
-  createTweet(@Body() tweetDto: TweetDto, @ActiveUser('sub') user) {
-    console.log(user);
-    // return this.tweetService.createTweet(tweetDto);
+  createTweet(@Body() tweetDto: TweetDto, @ActiveUser('sub') userId: number) {
+    return this.tweetService.createTweet(tweetDto, userId);
   }
 
   @Patch(':tweetId')
